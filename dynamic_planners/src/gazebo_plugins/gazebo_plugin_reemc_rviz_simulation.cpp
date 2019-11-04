@@ -7,6 +7,9 @@
 #include <cmath>
 #include <ros/ros.h>
 #include <geometry_msgs/PoseArray.h>
+//#include <gazebo math="" math.hh="">
+#include <ignition/math/Pose3.hh>
+
 
 namespace gazebo
 {
@@ -73,68 +76,68 @@ private:
 
   void publishPoses() const
   {
-    math::Pose poseCamera = cameraLink->GetWorldPose();
-    math::Pose poseBase = baseLink->GetWorldPose();
-    math::Pose poseLeftFoot = leftFootLink->GetWorldPose();
-    math::Pose poseRightFoot = rightFootLink->GetWorldPose();
-    math::Pose poseBaseToCamera = poseCamera - poseBase;
-    math::Pose poseBaseToLeftFoot = poseLeftFoot - poseBase;
-    math::Pose poseBaseToRightFoot = poseRightFoot - poseBase;
+    ignition::math::Pose3d poseCamera = cameraLink->WorldPose();
+    ignition::math::Pose3d poseBase = baseLink->WorldPose();
+    ignition::math::Pose3d poseLeftFoot = leftFootLink->WorldPose();
+    ignition::math::Pose3d poseRightFoot = rightFootLink->WorldPose();
+    ignition::math::Pose3d poseBaseToCamera = poseCamera - poseBase;
+    ignition::math::Pose3d poseBaseToLeftFoot = poseLeftFoot - poseBase;
+    ignition::math::Pose3d poseBaseToRightFoot = poseRightFoot - poseBase;
 
     geometry_msgs::PoseArray msg;
     msg.poses.resize(4);
 
-    msg.poses[0].position.x = poseBase.pos.x;
-    msg.poses[0].position.y = poseBase.pos.y;
-    msg.poses[0].position.z = poseBase.pos.z;
-    msg.poses[0].orientation.x = poseBase.rot.x;
-    msg.poses[0].orientation.y = poseBase.rot.y;
-    msg.poses[0].orientation.z = poseBase.rot.z;
-    msg.poses[0].orientation.w = poseBase.rot.w;
+    msg.poses[0].position.x = poseBase.Pos().X();
+    msg.poses[0].position.y = poseBase.Pos().Y();
+    msg.poses[0].position.z = poseBase.Pos().Z();
+    msg.poses[0].orientation.x = poseBase.Rot().X();
+    msg.poses[0].orientation.y = poseBase.Rot().Y();
+    msg.poses[0].orientation.z = poseBase.Rot().Z();
+    msg.poses[0].orientation.w = poseBase.Rot().W();
 
-    msg.poses[1].position.x = poseBaseToCamera.pos.x;
-    msg.poses[1].position.y = poseBaseToCamera.pos.y;
-    msg.poses[1].position.z = poseBaseToCamera.pos.z;
-    msg.poses[1].orientation.x = poseBaseToCamera.rot.x;
-    msg.poses[1].orientation.y = poseBaseToCamera.rot.y;
-    msg.poses[1].orientation.z = poseBaseToCamera.rot.z;
-    msg.poses[1].orientation.w = poseBaseToCamera.rot.w;
+    msg.poses[1].position.x = poseBaseToCamera.Pos().X();
+    msg.poses[1].position.y = poseBaseToCamera.Pos().Y();
+    msg.poses[1].position.z = poseBaseToCamera.Pos().Z();
+    msg.poses[1].orientation.x = poseBaseToCamera.Rot().X();
+    msg.poses[1].orientation.y = poseBaseToCamera.Rot().Y();
+    msg.poses[1].orientation.z = poseBaseToCamera.Rot().Z();
+    msg.poses[1].orientation.w = poseBaseToCamera.Rot().W();
 
-    msg.poses[2].position.x = poseBaseToLeftFoot.pos.x;
-    msg.poses[2].position.y = poseBaseToLeftFoot.pos.y;
-    msg.poses[2].position.z = poseBaseToLeftFoot.pos.z;
-    msg.poses[2].orientation.x = poseBaseToLeftFoot.rot.x;
-    msg.poses[2].orientation.y = poseBaseToLeftFoot.rot.y;
-    msg.poses[2].orientation.z = poseBaseToLeftFoot.rot.z;
-    msg.poses[2].orientation.w = poseBaseToLeftFoot.rot.w;
+    msg.poses[2].position.x = poseBaseToLeftFoot.Pos().X();
+    msg.poses[2].position.y = poseBaseToLeftFoot.Pos().Y();
+    msg.poses[2].position.z = poseBaseToLeftFoot.Pos().Z();
+    msg.poses[2].orientation.x = poseBaseToLeftFoot.Rot().X();
+    msg.poses[2].orientation.y = poseBaseToLeftFoot.Rot().Y();
+    msg.poses[2].orientation.z = poseBaseToLeftFoot.Rot().Z();
+    msg.poses[2].orientation.w = poseBaseToLeftFoot.Rot().W();
 
-    msg.poses[3].position.x = poseBaseToRightFoot.pos.x;
-    msg.poses[3].position.y = poseBaseToRightFoot.pos.y;
-    msg.poses[3].position.z = poseBaseToRightFoot.pos.z;
-    msg.poses[3].orientation.x = poseBaseToRightFoot.rot.x;
-    msg.poses[3].orientation.y = poseBaseToRightFoot.rot.y;
-    msg.poses[3].orientation.z = poseBaseToRightFoot.rot.z;
-    msg.poses[3].orientation.w = poseBaseToRightFoot.rot.w;
+    msg.poses[3].position.x = poseBaseToRightFoot.Pos().X();
+    msg.poses[3].position.y = poseBaseToRightFoot.Pos().Y();
+    msg.poses[3].position.z = poseBaseToRightFoot.Pos().Z();
+    msg.poses[3].orientation.x = poseBaseToRightFoot.Rot().X();
+    msg.poses[3].orientation.y = poseBaseToRightFoot.Rot().Y();
+    msg.poses[3].orientation.z = poseBaseToRightFoot.Rot().Z();
+    msg.poses[3].orientation.w = poseBaseToRightFoot.Rot().W();
 
     publisherPoses.publish(msg);
   }
 
   void subscriberResetWorldPoseHandler(const geometry_msgs::Pose &msg)
   {
-    math::Pose pose;
-    pose.pos.x = msg.position.x;
-    pose.pos.y = msg.position.y;
-    pose.pos.z = msg.position.z;
-    pose.rot.x = msg.orientation.x;
-    pose.rot.y = msg.orientation.y;
-    pose.rot.z = msg.orientation.z;
-    pose.rot.w = msg.orientation.w;
+    ignition::math::Pose3d pose;
+    pose.Pos().X() = msg.position.x;
+    pose.Pos().Y() = msg.position.y;
+    pose.Pos().Z() = msg.position.z;
+    pose.Rot().X() = msg.orientation.x;
+    pose.Rot().Y() = msg.orientation.y;
+    pose.Rot().Z() = msg.orientation.z;
+    pose.Rot().W() = msg.orientation.w;
 
     physics::Joint_V joints = model->GetJoints();
 
     for (int i = 0; i < joints.size(); ++i)
     {
-      int angleCount = joints[i]->GetAngleCount();
+      int angleCount = joints[i]-> DOF();
       for (int j = 0; j < angleCount; ++j)
         joints[i]->SetPosition(j, 0.0);
     }
