@@ -1,0 +1,10 @@
+ReemC&Moveit:
+http://wiki.ros.org/Robots/REEM-C/Tutorials/moveit
+http://wiki.ros.org/Robots/REEM-C/Tutorials/play_motion
+http://wiki.ros.org/Robots/REEM-C/Tutorials/launch
+
+Error:
+- no "rosparam list | grep play_motion", needed for moveit & ReemC
+
+-[ERROR] [1574168429.688631, 100.541000]: Failed to load left_leg_controller
+-[ERROR] [1574168430.694369, 101.012000]: Failed to load right_leg_controller
