@@ -44,6 +44,7 @@ public:
     lastPublishTime = ros::Time::now();
     updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&GazeboPluginReemcRvizSimulation::onUpdate, this));
     subscriberResetWorldPose = nh.subscribe("reset_robot_pose", 1, &GazeboPluginReemcRvizSimulation::subscriberResetWorldPoseHandler, this);
+    std::cout << "PLUGIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
   }
 
   void onUpdate()
@@ -76,12 +77,19 @@ private:
 
   void publishPoses() const
   {
+    std::cout << "Camera Link !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     ignition::math::Pose3d poseCamera = cameraLink->WorldPose();
+    std::cout << "Base Link !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     ignition::math::Pose3d poseBase = baseLink->WorldPose();
+    std::cout << "LeftFood Link !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     ignition::math::Pose3d poseLeftFoot = leftFootLink->WorldPose();
+    std::cout << "RightFood Link !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     ignition::math::Pose3d poseRightFoot = rightFootLink->WorldPose();
+    std::cout << "BaseToCamera Link !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     ignition::math::Pose3d poseBaseToCamera = poseCamera - poseBase;
+    std::cout << "BaseToLeft Link !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     ignition::math::Pose3d poseBaseToLeftFoot = poseLeftFoot - poseBase;
+    std::cout << "BaseToRight Link !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     ignition::math::Pose3d poseBaseToRightFoot = poseRightFoot - poseBase;
 
     geometry_msgs::PoseArray msg;

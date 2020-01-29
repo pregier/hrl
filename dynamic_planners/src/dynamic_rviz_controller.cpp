@@ -49,8 +49,11 @@ void DynamicRvizController::run()
     rate.sleep();
     ros::spinOnce();
 
-    if (firstTransformSet && dynamicHeightMap != nullptr && runMapping)
+    if (firstTransformSet && dynamicHeightMap != nullptr && runMapping){
       dynamicHeightMap->updateMap(transformBaseToCamera, robotPose);
+      std::cout << "First transform set in run in DynamicRvizController" << std::endl;
+
+    }
 
     if (runMapping && runLocalGridMapping)
     {
@@ -67,7 +70,10 @@ void DynamicRvizController::run()
     }
 
     dynamicRvizVisualizer->updateMap();
+
+//Peter: Hier wird die global Map gepublished
     dynamicRvizVisualizer->updateMapGlobal();
+
     dynamicRvizVisualizer->updateAStarPathGlobal();
     dynamicRvizVisualizer->updateAStarPathLocal();
     dynamicRvizVisualizer->updateFootstepPlan();
@@ -128,7 +134,7 @@ void DynamicRvizController::initializeMessageHandling()
                                                        &DynamicRvizController::subscriberRunFootstepExecutionChangedHandler, this);
   subscriberFootstepExecutorBusy = nh.subscribe("busy_executing_step", 0, &DynamicRvizController::subscriberFootstepExecutorBusyHandler, this);
   publisherResetRobotPose = nh.advertise<geometry_msgs::Pose>("reset_robot_pose", 1);
-  publisherJointTrajectory = nh.advertise<trajectory_msgs::JointTrajectory>("/lower_body_controller/command", 1);
+  publisherJointTrajectory = nh.advertise<trajectory_msgs::JointTrajectory>("/lower_body_controller/command", 2);
   serviceClientGetHeightMap = nh.serviceClient<dynamic_planners::get_height_map>("get_height_map");
   serviceClientFootstepExecution = nh.serviceClient<reemc_trajectory_execution::single_footstep_execution>("execute_single_footstep");
   serviceClientStepToInitPose = nh.serviceClient<reemc_trajectory_execution::step_to_init_pose>("step_to_init_pose");
@@ -162,6 +168,8 @@ void DynamicRvizController::subscriberCreateMapperHandler(const std_msgs::Empty 
   if (dynamicHeightMap != nullptr)
     delete dynamicHeightMap;
 
+
+  std::cout << "subscriberCreateMapperHandler in DynamicRvizController" << std::endl;
   dynamicHeightMap = new DynamicHeightMap;
   dynamicRvizVisualizer->setDynamicHeightMap(dynamicHeightMap);
   if (globalMap != nullptr)
@@ -187,6 +195,8 @@ void DynamicRvizController::subscriberRobotPosesHandler(const geometry_msgs::Pos
   const geometry_msgs::Pose &poseLeftFoot = msg.poses[2];
   const geometry_msgs::Pose &poseRightFoot = msg.poses[3];
 
+  std::cout << "Transform Broadcast" << std::endl;
+  //Peter:
   tf::StampedTransform transform;
   transform.stamp_ = ros::Time::now();
   transform.child_frame_id_ = "base_link";
@@ -286,15 +296,22 @@ void DynamicRvizController::subscriberSetGlobalMapHandler(const std_msgs::Empty 
   globalMap = new GlobalMap;
   globalMap->setMap(req, res, safetyDistance);
 
-  if (dynamicHeightMap != nullptr)
-    dynamicHeightMap->setGlobalMap(globalMap);
+  if (dynamicHeightMap != nullptr){
+      dynamicHeightMap->setGlobalMap(globalMap);
+      std::cout << "dynamicHeightMap is not nullptr" << std::endl;
+  }
+
+  //Peter: Initialize the global Marker map. Global map only used to determine the size of the marker 
   dynamicRvizVisualizer->setNewGlobalMap(globalMap, res.objects);
+
+
   dynamicAStarGridPlanner->setGlobalMap(globalMap);
 
   //dynamicAStarGridPlanner->invalidateGlobalPath();
   dynamicAStarGridPlanner->invalidateLocalPath();
   //dynamicFootstepPlanner->invalidateGlobalPath();
   dynamicFootstepPlanner->invalidatePlan();
+  std::cout << "Set Global Map" << std::endl;
 }
 
 void DynamicRvizController::subscriberFindGridPlanGlobalHandler(const geometry_msgs::PointStamped &msg)

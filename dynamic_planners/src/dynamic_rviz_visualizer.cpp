@@ -602,6 +602,7 @@ void DynamicRvizVisualizer::publishMapGlobal()
     msgMapGlobalObjects.markers[i].action = visualization_msgs::Marker::ADD;
   }
 
+  std::cout << msgMapGlobalObjects.markers.size() << " Global Map Marker Size" << std::endl;
   publisherMapGlobal.publish(msgMapGlobalObjects);
 }
 
